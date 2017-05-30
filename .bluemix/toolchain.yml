@@ -39,7 +39,7 @@ services:
       ui-pipeline: true
       configuration:
         content:
-          $text: pipeline.yml
+          $text: shared_key_pipeline.yml
         env:
           SAMPLE_REPO: shared-key-repo
           CF_APP_NAME: '{{form.pipeline.parameters.prod-app-name}}'
