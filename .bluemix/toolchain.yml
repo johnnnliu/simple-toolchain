@@ -25,9 +25,8 @@ services:
   shared-key-repo:
     service_id: githubpublic
     parameters:
-      repo_name: '{{toolchain.name}}'
       repo_url: 'https://github.com/johnnnliu/simple-toolchain'
-      type: existing
+      type: Existing
   shared-key-build:
     service_id: pipeline
     parameters:
