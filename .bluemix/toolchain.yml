@@ -26,6 +26,14 @@ services:
     service_id: githubpublic
     parameters:
       repo_name: '{{toolchain.name}}'
+      repo_url: 'https://github.com/jedward19/keyprotectjwtutil'
+      type: link
+      has_issues: true
+      enable_traceability: true
+  simple-toolchain-repo:
+    service_id: githubpublic
+    parameters:
+      repo_name: '{{toolchain.name}}'
       repo_url: 'https://github.com/johnnnliu/simple-toolchain'
       type: link
       has_issues: true
@@ -41,7 +49,7 @@ services:
         content:
           $text: shared_key_pipeline.yml
         env:
-          SAMPLE_REPO: shared-key-repo
+          KEY_REPO: shared-key-repo
           CF_APP_NAME: '{{form.pipeline.parameters.prod-app-name}}'
           PROD_SPACE_NAME: '{{form.pipeline.parameters.prod-space}}'
           PROD_ORG_NAME: '{{form.pipeline.parameters.prod-organization}}'
