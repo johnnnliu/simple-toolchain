@@ -27,7 +27,7 @@ services:
     parameters:
       repo_name: '{{toolchain.name}}'
       repo_url: 'https://github.com/johnnnliu/simple-toolchain'
-      type: clone
+      type: fork
       has_issues: true
       enable_traceability: true
   shared-key-build:
