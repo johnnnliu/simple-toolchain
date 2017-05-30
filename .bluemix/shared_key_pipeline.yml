@@ -2,7 +2,7 @@
 stages:
 - name: Build
   inputs:
-  - url: https://github.com/jedward19/keyprotectjwtutil.git
+  - url: https://github.com/johnnnliu/keyprotectjwtutil.git
     type: git
     branch: master
     dir_name: null
