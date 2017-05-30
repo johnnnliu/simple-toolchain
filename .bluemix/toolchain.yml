@@ -24,8 +24,8 @@ toolchain:
 services:
   shared-key-repo:
     service_id: githubpublic
-    parameters:
-    repo_name: '{{toolchain.name}}'
+      parameters:
+      repo_name: '{{toolchain.name}}'
       repo_url: 'https://github.com/johnnnliu/simple-toolchain'
       type: Existing
       has_issues: true
