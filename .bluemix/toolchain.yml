@@ -53,7 +53,7 @@ services:
         env:
           DEV_SPACE: dev
           IQA_SPACE: iqa
-          REPO: all-flights-service-repo
+          REPO: alt-flights-service-repo
           CF_APP_NAME: '{{form.pipeline.parameters.prod-app-name}}'
           PROD_SPACE_NAME: '{{form.pipeline.parameters.prod-space}}'
           PROD_ORG_NAME: '{{form.pipeline.parameters.prod-organization}}'
