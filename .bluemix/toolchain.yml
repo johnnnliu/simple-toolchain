@@ -49,12 +49,14 @@ services:
         content:
           $text: shared_key_pipeline.yml
         env:
+          DEV_SPACE: dev
+          IQA_SPACE: iqa
           KEY_REPO: shared-key-repo
           CF_APP_NAME: '{{form.pipeline.parameters.prod-app-name}}'
           PROD_SPACE_NAME: '{{form.pipeline.parameters.prod-space}}'
           PROD_ORG_NAME: '{{form.pipeline.parameters.prod-organization}}'
           PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
-        execute: true
+        execute: false
   webide:
     service_id: orion
 form:
