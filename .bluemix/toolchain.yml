@@ -9,8 +9,8 @@ template:
   header: '![](toolchain.svg?localize)'
   icon: icon.svg
   required:
-    - shared-key-build
     - shared-key-repo
+    - shared-key-pipeline 
     - alt-flights-service-repo
     - alt-flights-service-pipeline
   info:
@@ -32,6 +32,25 @@ services:
       type: link
       has_issues: true
       enable_traceability: true
+      shared-key-pipeline:
+  service_id: pipeline
+    parameters:
+      services:
+        - shared-key-repo
+      name: '{{services.shared-key-repo.parameters.repo_name}}'
+      ui-pipeline: true
+      configuration:
+        content:
+          $text: shared_key_pipeline.yml
+        env:
+          DEV_SPACE: dev
+          IQA_SPACE: iqa
+          REPO: shared-key-repo
+          CF_APP_NAME: '{{form.pipeline.parameters.prod-app-name}}'
+          PROD_SPACE_NAME: '{{form.pipeline.parameters.prod-space}}'
+          PROD_ORG_NAME: '{{form.pipeline.parameters.prod-organization}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+        execute: false
   alt-flights-service-repo:
     service_id: hostedgit
     parameters:
@@ -67,25 +86,6 @@ services:
       type: link
       has_issues: true
       enable_traceability: true
-  shared-key-build:
-    service_id: pipeline
-    parameters:
-      services:
-        - shared-key-repo
-      name: '{{services.shared-key-repo.parameters.repo_name}}'
-      ui-pipeline: true
-      configuration:
-        content:
-          $text: shared_key_pipeline.yml
-        env:
-          DEV_SPACE: dev
-          IQA_SPACE: iqa
-          REPO: shared-key-repo
-          CF_APP_NAME: '{{form.pipeline.parameters.prod-app-name}}'
-          PROD_SPACE_NAME: '{{form.pipeline.parameters.prod-space}}'
-          PROD_ORG_NAME: '{{form.pipeline.parameters.prod-organization}}'
-          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
-        execute: false
   webide:
     service_id: orion
 form:
