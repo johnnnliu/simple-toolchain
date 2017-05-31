@@ -31,13 +31,13 @@ services:
       repo_url: 'https://github.com/jedward19/keyprotectjwtutil'
       type: link
       has_issues: true
-      enable_traceability: true
+      enable_traceability: false
   shared-key-pipeline:
     service_id: pipeline
     parameters:
       services:
         - shared-key-repo
-      name: '{{services.shared-key-repo.parameters.repo_name}}'
+      name: 'shared-key-pipeline'
       ui-pipeline: true
       configuration:
         content:
@@ -58,13 +58,13 @@ services:
       repo_url: 'https://git.ng.bluemix.net/drssgroup/alt-flights-service.git'
       type: link
       has_issues: true
-      enable_traceability: true
+      enable_traceability: false
   alt-flights-service-pipeline:
     service_id: pipeline
     parameters:
       services:
         - alt-flights-service-repo
-      name: '{{services.alt-flights-service-repo.parameters.repo_name}}'
+      name: 'alt-flights-service-pipeline'
       ui-pipeline: true
       configuration:
         content:
