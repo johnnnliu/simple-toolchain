@@ -11,6 +11,8 @@ template:
   required:
     - shared-key-build
     - shared-key-repo
+    - all-flights-service-repo
+    - all-flights-service-pipeline
   info:
     git url: >-
       [https://github.com/johnnnliu/simple-toolchain](https://github.com/johnnnliu/simple-toolchain)
@@ -30,6 +32,33 @@ services:
       type: link
       has_issues: true
       enable_traceability: true
+  all-flights-service-repo:
+    service_id: hostedgit
+    parameters:
+      repo_name: '{{toolchain.name}}'
+      repo_url: 'https://git.ng.bluemix.net/drssgroup/alt-flights-service.git'
+      type: link
+      has_issues: true
+      enable_traceability: true
+  all-flights-service-pipeline:
+    service_id: pipeline
+    parameters:
+      services:
+        - all-flights-service-repo
+      name: '{{services.all-flights-service-repo.parameters.repo_name}}'
+      ui-pipeline: true
+      configuration:
+        content:
+          $text: all-flights-service-pipeline.yml
+        env:
+          DEV_SPACE: dev
+          IQA_SPACE: iqa
+          REPO: all-flights-service-repo
+          CF_APP_NAME: '{{form.pipeline.parameters.prod-app-name}}'
+          PROD_SPACE_NAME: '{{form.pipeline.parameters.prod-space}}'
+          PROD_ORG_NAME: '{{form.pipeline.parameters.prod-organization}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+        execute: false
   simple-toolchain-repo:
     service_id: githubpublic
     parameters:
@@ -51,7 +80,7 @@ services:
         env:
           DEV_SPACE: dev
           IQA_SPACE: iqa
-          KEY_REPO: shared-key-repo
+          REPO: shared-key-repo
           CF_APP_NAME: '{{form.pipeline.parameters.prod-app-name}}'
           PROD_SPACE_NAME: '{{form.pipeline.parameters.prod-space}}'
           PROD_ORG_NAME: '{{form.pipeline.parameters.prod-organization}}'
