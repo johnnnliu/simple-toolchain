@@ -49,8 +49,8 @@ stages:
   - name: Deploy
     type: deployer
     target:
-      region_id: ibm:yp:us-south
-      organization: AA-CustTech-FLY
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
       space: iqa
       application: aa-alt-flights-service-iqa
     script: |-
@@ -75,8 +75,8 @@ stages:
   - name: Deploy
     type: deployer
     target:
-      region_id: ibm:yp:us-south
-      organization: AA-CustTech-FLY
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
       space: e2e_cert
       application: aa-alt-flights-service-cert
     script: |-
@@ -101,8 +101,8 @@ stages:
   - name: Deploy
     type: deployer
     target:
-      region_id: ibm:yp:us-south
-      organization: AA-CustTech-FLY
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
       space: prod
       application: alt-flights-service
     script: |-
@@ -123,8 +123,8 @@ stages:
   - name: Deploy
     type: deployer
     target:
-      region_id: ibm:yp:us-south
-      organization: AA-CustTech-FLY
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
       space: iqa
       application: alt-flights-service
     script: |
@@ -145,8 +145,8 @@ stages:
   - name: Deploy
     type: deployer
     target:
-      region_id: ibm:yp:us-south
-      organization: AA-CustTech-FLY
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
       space: e2e_cert
       application: alt-flights-service
     script: |
