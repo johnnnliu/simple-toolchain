@@ -2,7 +2,7 @@
 stages:
 - name: Build
   inputs:
-  - url: https://git.ng.bluemix.net/drssgroup/alt-flights-service.git
+  - service: ${REPO}
     type: git
     branch: master
     dir_name: null
