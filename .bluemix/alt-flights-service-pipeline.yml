@@ -1,0 +1,164 @@
+---
+stages:
+- name: Build
+  inputs:
+  - url: https://git.ng.bluemix.net/drssgroup/alt-flights-service.git
+    type: git
+    branch: master
+    dir_name: null
+  triggers:
+  - type: commit
+  jobs:
+  - name: Build
+    type: builder
+    artifact_dir: ''
+    build_type: gradle
+    script: "#!/bin/bash\nexport JAVA_HOME=$JAVA8_HOME\nexport PATH=$JAVA_HOME/bin:$PATH\n\
+      export\n\necho \"Current Java version is...\"\njava -version\n\n./gradlew build\n\
+      \n#jaxb-xjc-2.2.11.jar access is not allowed in the IBM JRE.  Use the following\
+      \ System property\n# to enable it.  Details can be found at http://docs.oracle.com/javase/8/docs/api/javax/xml/XMLConstants.html#ACCESS_EXTERNAL_SCHEMA\n\
+      \n./gradlew --debug -Djavax.xml.accessExternalSchema=all war "
+    enable_tests: true
+    test_file_pattern: build/test-Results/**/TEST-*.xml
+- name: Deploy to Dev
+  inputs:
+  - type: job
+    stage: Build
+    job: Build
+    dir_name: null
+  triggers:
+  - type: stage
+  jobs:
+  - name: Deploy
+    type: deployer
+    target:
+      region_id: ibm:yp:us-south
+      organization: AA-CustTech-FLY
+      space: dev
+      application: alt-flights-service
+    script: |
+      #!/bin/bash
+      cf push -f manifest.dev.yml
+- name: Deploy to IQA
+  inputs:
+  - type: job
+    stage: Build
+    job: Build
+    dir_name: null
+  jobs:
+  - name: Deploy
+    type: deployer
+    target:
+      region_id: ibm:yp:us-south
+      organization: AA-CustTech-FLY
+      space: iqa
+      application: aa-alt-flights-service-iqa
+    script: |-
+      #!/bin/bash
+      BLUE_APP="$CF_APP-blue"
+      GREEN_APP="$CF_APP"
+
+      cf push "${BLUE_APP}" -n "${CF_APP}" -f manifest.iqa.yml
+      cf app "${GREEN_APP}" && cf stop "${GREEN_APP}"
+      cf app "${GREEN_APP}" && cf delete "${GREEN_APP}" -f
+      cf rename "${BLUE_APP}" "${GREEN_APP}"
+
+      export APP_NAME="$GREEN_APP"
+      export APP_URL=http://$(cf app $APP_NAME | grep urls: | awk '{print $2}')
+- name: Deploy to E2E CERT
+  inputs:
+  - type: job
+    stage: Build
+    job: Build
+    dir_name: null
+  jobs:
+  - name: Deploy
+    type: deployer
+    target:
+      region_id: ibm:yp:us-south
+      organization: AA-CustTech-FLY
+      space: e2e_cert
+      application: aa-alt-flights-service-cert
+    script: |-
+      #!/bin/bash
+      BLUE_APP="$CF_APP-blue"
+      GREEN_APP="$CF_APP"
+
+      cf push "${BLUE_APP}" -n "${CF_APP}" -f manifest.cert.yml
+      cf app "${GREEN_APP}" && cf stop "${GREEN_APP}"
+      cf app "${GREEN_APP}" && cf delete "${GREEN_APP}" -f
+      cf rename "${BLUE_APP}" "${GREEN_APP}"
+
+      export APP_NAME="$GREEN_APP"
+      export APP_URL=http://$(cf app $APP_NAME | grep urls: | awk '{print $2}')
+- name: Prod Deploy Stage
+  inputs:
+  - type: job
+    stage: Build
+    job: Build
+    dir_name: null
+  jobs:
+  - name: Deploy
+    type: deployer
+    target:
+      region_id: ibm:yp:us-south
+      organization: AA-CustTech-FLY
+      space: prod
+      application: alt-flights-service
+    script: |-
+      #!/bin/bash
+
+      # modify the host and app name values to use iqa
+      sed -i 's/\(host: \)..*/host: aa-alt-flights-service/' manifest.yml
+      sed -i 's/\(name: \)..*/name: aa-alt-flights-service/' manifest.yml
+
+      cf push -f manifest.yml
+- name: BACKUP-Deploy to IQA
+  inputs:
+  - type: job
+    stage: Build
+    job: Build
+    dir_name: null
+  jobs:
+  - name: Deploy
+    type: deployer
+    target:
+      region_id: ibm:yp:us-south
+      organization: AA-CustTech-FLY
+      space: iqa
+      application: alt-flights-service
+    script: |
+      #!/bin/bash
+
+      # modify the host and app name values to use iqa
+      sed -i 's/\(host: \)..*/host: aa-alt-flights-service-iqa/' manifest.yml
+      sed -i 's/\(name: \)..*/name: aa-alt-flights-service-iqa/' manifest.yml
+
+      cf push -t 180 -f manifest.yml
+- name: BACKUP-Deploy to E2E CERT
+  inputs:
+  - type: job
+    stage: Build
+    job: Build
+    dir_name: null
+  jobs:
+  - name: Deploy
+    type: deployer
+    target:
+      region_id: ibm:yp:us-south
+      organization: AA-CustTech-FLY
+      space: e2e_cert
+      application: alt-flights-service
+    script: |
+      #!/bin/bash
+
+      # modify the host and app name values to use iqa
+      sed -i 's/\(host: \)..*/host: aa-alt-flights-service-cert/' manifest.yml
+      sed -i 's/\(name: \)..*/name: aa-alt-flights-service-cert/' manifest.yml
+
+      cf push -t 180 -f manifest.yml
+hooks:
+- enabled: true
+  label: null
+  ssl_enabled: false
+  url: https://devops-api.ng.bluemix.net/v1/messaging/webhook/publish
