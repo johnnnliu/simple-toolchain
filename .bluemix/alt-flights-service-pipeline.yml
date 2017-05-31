@@ -32,8 +32,8 @@ stages:
   - name: Deploy
     type: deployer
     target:
-      region_id: ibm:yp:us-south
-      organization: AA-CustTech-FLY
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
       space: dev
       application: alt-flights-service
     script: |
