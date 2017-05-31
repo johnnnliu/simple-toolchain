@@ -32,8 +32,8 @@ services:
       type: link
       has_issues: true
       enable_traceability: true
-      shared-key-pipeline:
-  service_id: pipeline
+  shared-key-pipeline:
+    service_id: pipeline
     parameters:
       services:
         - shared-key-repo
