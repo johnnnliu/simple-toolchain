@@ -37,7 +37,7 @@ stages:
   - name: GenerateUpdateKey
     type: deployer
     target:
-      region_id: ${PROD_REGION_NAME}
+      region_id: ${PROD_REGION_ID}
       organization: ${PROD_ORG_NAME}
       space: dev
       application: key-protect
@@ -76,7 +76,7 @@ stages:
   - name: GenerateUpdateKey
     type: deployer
     target:
-      region_id: ${PROD_REGION_NAME}
+      region_id: ${PROD_REGION_ID}
       organization: ${PROD_ORG_NAME}
       space: iqa
       application: key-protect
